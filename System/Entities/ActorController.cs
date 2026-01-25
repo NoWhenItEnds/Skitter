@@ -1,7 +1,9 @@
+using System;
+
 namespace Skitter.Entities
 {
     /// <summary> A controller / brain for an actor entity. </summary>
-    public class ActorController
+    public class ActorController : IEquatable<ActorController>
     {
         /// <summary> The actor this controller manipulates. </summary>
         public Actor ControlledActor { get; private set; }
@@ -13,5 +15,13 @@ namespace Skitter.Entities
         {
             ControlledActor = controlledActor;
         }
+
+
+        /// <inheritdoc/>
+        public override Int32 GetHashCode() => HashCode.Combine(ControlledActor);
+
+
+        /// <inheritdoc/>
+        public Boolean Equals(ActorController? other) => other != null ? ControlledActor == other.ControlledActor : false;
     }
 }

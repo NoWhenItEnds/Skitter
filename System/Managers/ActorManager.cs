@@ -1,7 +1,10 @@
 #nullable disable warnings
 using System;
+using System.Collections.Generic;
 using Administrator.Utilities.Singletons;
 using Godot;
+using Skitter.Entities;
+using Skitter.Utilities;
 
 namespace Skitter.Managers
 {
@@ -15,5 +18,20 @@ namespace Skitter.Managers
         /// <summary> The prefab used to represent an actor within the game world. </summary>
         [ExportGroup("Resources")]
         [Export] private PackedScene _actorPrefab;
+
+
+        /// <summary> The pool used to manage actor nodes. </summary>
+        private ObjectPool<ActorNode> _actorPool;
+
+        /// <summary> An exhaustive list of all the controllers for the actors within the game world. </summary>
+        private HashSet<ActorController> _actorControllers;
+
+
+        /// <inheritdoc/>
+        public override void _Ready()
+        {
+            _actorPool = new ObjectPool<ActorNode>(this, _actorPrefab, _poolSize);
+            _actorControllers = new HashSet<ActorController>();
+        }
     }
 }
