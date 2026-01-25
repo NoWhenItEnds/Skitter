@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ActorData" load_steps=2 format=3 uid="uid://mwk1rgp0qa4j"]
+
+[ext_resource type="Script" uid="uid://d07ymdtqopdfe" path="res://System/Entities/Data/ActorData.cs" id="1_oukad"]
+
+[resource]
+script = ExtResource("1_oukad")
+FirstName = "Jane"
+LastName = "Testington"
+metadata/_custom_type_script = "uid://d07ymdtqopdfe"

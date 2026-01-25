@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using Administrator.Utilities.Singletons;
 using Godot;
 using Skitter.Entities;
+using Skitter.Entities.Data;
 using Skitter.Utilities;
+using Skitter.Utilities.Extensions;
 
 namespace Skitter.Managers
 {
@@ -26,12 +28,29 @@ namespace Skitter.Managers
         /// <summary> An exhaustive list of all the controllers for the actors within the game world. </summary>
         private HashSet<ActorController> _actorControllers;
 
+        /// <summary> The loaded data of all the potential actors within the game world. </summary>
+        /// <remarks> While this is initially loaded with templated 'prefabs', save data is then applied to modify them to correctly represent the current game state. </remarks>
+        private HashSet<ActorData> _availableActorData;
+
 
         /// <inheritdoc/>
         public override void _Ready()
         {
-            _actorPool = new ObjectPool<ActorNode>(this, _actorPrefab, _poolSize);
+            // Load actor data.
+            ActorData[] initialData = ResourceExtensions.GetResources<ActorData>();
+            _availableActorData = new HashSet<ActorData>(initialData);
+            // TODO - Load save data and overwrite on modification.
+
             _actorControllers = new HashSet<ActorController>();
+            _actorPool = new ObjectPool<ActorNode>(this, _actorPrefab, _poolSize);
+            foreach (ActorData data in _availableActorData)
+            {
+                Actor actor = new Actor(data);
+                ActorController controller = new ActorController(actor);
+                _actorControllers.Add(controller);
+                ActorNode node = _actorPool.GetAvailableObject();
+                controller.SetActorNode(node);
+            }
         }
     }
 }
