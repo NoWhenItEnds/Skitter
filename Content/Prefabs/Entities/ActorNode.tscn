@@ -5,13 +5,22 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m21nq"]
 
-[node name="ActorNode" type="CharacterBody2D" node_paths=PackedStringArray("_collisionShape", "_sprite")]
+[node name="ActorNode" type="CharacterBody2D" node_paths=PackedStringArray("_collisionShape", "_sprite", "_nameLabel")]
 script = ExtResource("1_m21nq")
 _collisionShape = NodePath("CollisionShape2D")
 _sprite = NodePath("AnimatedSprite2D")
+_nameLabel = NodePath("Name Label")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_m21nq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("2_wrqiv")
+
+[node name="Name Label" type="RichTextLabel" parent="."]
+offset_left = -64.0
+offset_top = 64.0
+offset_right = 191.99991
+offset_bottom = 104.0
+bbcode_enabled = true
+text = "FirstName LastName"

@@ -1,6 +1,7 @@
 #nullable disable warnings
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Administrator.Utilities.Singletons;
 using Godot;
 using Skitter.Entities;
@@ -20,6 +21,10 @@ namespace Skitter.Managers
         /// <summary> The prefab used to represent an actor within the game world. </summary>
         [ExportGroup("Resources")]
         [Export] private PackedScene _actorPrefab;
+
+
+        /// <summary> The actor entity currently being controlled by the player. </summary>
+        public ActorController PlayerController { get; private set; }
 
 
         /// <summary> The pool used to manage actor nodes. </summary>
@@ -45,12 +50,14 @@ namespace Skitter.Managers
             _actorPool = new ObjectPool<ActorNode>(this, _actorPrefab, _poolSize);
             foreach (ActorData data in _availableActorData)
             {
-                Actor actor = new Actor(data);
-                ActorController controller = new ActorController(actor);
+                ActorController controller = new ActorController(data);
                 _actorControllers.Add(controller);
                 ActorNode node = _actorPool.GetAvailableObject();
                 controller.SetActorNode(node);
             }
+
+            // TODO - A better way to determine the player.
+            PlayerController = _actorControllers.FirstOrDefault(x => x.Data.GetUId() == "actordata_janetestington") ?? throw new ArgumentNullException("Unable to find the player actor.");
         }
     }
 }
