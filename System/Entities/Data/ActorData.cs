@@ -1,24 +1,19 @@
 #nullable disable warnings
 using System;
-using Godot;
+using System.Text.Json.Serialization;
 
 namespace Skitter.Entities.Data
 {
     /// <summary> Data possessed by all actors within the game world. </summary>
-    [GlobalClass]
-    public partial class ActorData : EntityData
+    public class ActorData : EntityData
     {
         /// <summary> The actor's first name. </summary>
-        [ExportGroup("ActorData")]
-        [ExportSubgroup("General")]
-        [Export] public String FirstName { get; set; }
+        [JsonPropertyName("first_name")]
+        public String FirstName { get; set; }
 
         /// <summary> The actor's last name. </summary>
-        [Export] public String LastName { get; set; }
-
-
-        /// <summary> Data possessed by all actors within the game world. </summary>
-        public ActorData() : base() { }
+        [JsonPropertyName("last_name")]
+        public String LastName { get; set; }
 
 
         /// <inheritdoc/>

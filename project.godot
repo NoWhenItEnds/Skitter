@@ -27,6 +27,7 @@ project/assembly_name="Skitter"
 
 folder_colors={
 "res://Content/": "blue",
+"res://Data/": "green",
 "res://System/": "purple"
 }
 

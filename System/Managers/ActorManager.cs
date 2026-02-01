@@ -42,7 +42,7 @@ namespace Skitter.Managers
         public override void _Ready()
         {
             // Load actor data.
-            ActorData[] initialData = ResourceExtensions.GetResources<ActorData>();
+            ActorData[] initialData = JsonExtensions.LoadData<ActorData>("res://Data/EntityData/ActorData");
             _availableActorData = new HashSet<ActorData>(initialData);
             // TODO - Load save data and overwrite on modification.
 
