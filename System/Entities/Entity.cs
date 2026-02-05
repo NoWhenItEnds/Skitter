@@ -1,29 +1,39 @@
 using System;
-using Skitter.Entities.Data;
+using System.Threading.Tasks;
+using Godot;
+using Skitter.Managers;
 
 namespace Skitter.Entities
 {
     /// <summary> A base entity. All things within the game world will be derived from this. </summary>
-    /// <typeparam name="T"> The persistent data object representing the entity's state. </typeparam>
-    public abstract class Entity<T> : IEquatable<Entity<T>> where T : EntityData
+    public abstract class Entity : IEquatable<Entity>
     {
-        /// <summary> The persistent data object representing the entity's state. </summary>
-        public T Data { get; init; }
-
-
         /// <summary> A base entity. All things within the game world will be derived from this. </summary>
-        /// <param name="data"> The persistent data object representing the entity's state. </param>
-        public Entity(T data)
+        public Entity()
         {
-            Data = data;
+            GameManager.Instance.TurnStart.Subscribe(OnTurnStartAsync);
+            GameManager.Instance.TurnEnd.Subscribe(OnTurnEndAsync);
         }
 
 
-        /// <inheritdoc/>
-        public override Int32 GetHashCode() => HashCode.Combine(Data);
+        /// <summary> Get the entity's unique identifier. </summary>
+        /// <returns> A string representing the entity's unique identifier. </returns>
+        public abstract String GetUId();
+
+
+        /// <summary> Called when a new turn begins. </summary>
+        public virtual async Task OnTurnStartAsync() { GD.Print($"Start: {GetUId()}"); }
+
+
+        /// <summary> Called when the current turn concludes. </summary>
+        public virtual async Task OnTurnEndAsync() { GD.Print($"End: {GetUId()}"); }
 
 
         /// <inheritdoc/>
-        public Boolean Equals(Entity<T>? other) => other != null ? Data == other.Data : false;
+        public override Int32 GetHashCode() => HashCode.Combine(GetUId());
+
+
+        /// <inheritdoc/>
+        public Boolean Equals(Entity? other) => other != null ? GetUId() == other.GetUId() : false;
     }
 }

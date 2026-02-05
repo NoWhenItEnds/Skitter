@@ -1,14 +1,11 @@
 #nullable disable warnings
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Administrator.Utilities.Singletons;
 using Godot;
 using Skitter.Entities;
-using Skitter.Entities.Data;
 using Skitter.Entities.Nodes;
 using Skitter.Utilities;
-using Skitter.Utilities.Extensions;
 
 namespace Skitter.Managers
 {
@@ -34,15 +31,15 @@ namespace Skitter.Managers
         /// <summary> An exhaustive list of all the controllers for the actors within the game world. </summary>
         private HashSet<ActorController> _actorControllers;
 
-        /// <summary> The loaded data of all the potential actors within the game world. </summary>
-        /// <remarks> While this is initially loaded with templated 'prefabs', save data is then applied to modify them to correctly represent the current game state. </remarks>
-        private HashSet<ActorData> _availableActorData;
-
 
         /// <inheritdoc/>
         public override void _Ready()
         {
+            _actorControllers = new HashSet<ActorController>();
+            _actorPool = new ObjectPool<ActorNode>(this, _actorPrefab, _poolSize);
+
             // Load actor data.
+            /*
             ActorData[] initialData = JsonExtensions.LoadData<ActorData>("res://Data/EntityData/ActorData");
             _availableActorData = new HashSet<ActorData>(initialData);
             // TODO - Load save data and overwrite on modification.
@@ -59,7 +56,7 @@ namespace Skitter.Managers
             }
 
             // TODO - A better way to determine the player.
-            PlayerController = _actorControllers.FirstOrDefault(x => x.Entity.Data.GetUId() == "actordata_janetestington") ?? throw new ArgumentNullException("Unable to find the player actor.");
+            PlayerController = _actorControllers.FirstOrDefault(x => x.Entity.Data.GetUId() == "actordata_janetestington") ?? throw new ArgumentNullException("Unable to find the player actor.");*/
         }
     }
 }

@@ -1,12 +1,15 @@
-using Skitter.Entities.Data;
+using System;
 
 namespace Skitter.Entities
 {
     /// <summary> Represents a thinking, controllable entity within the game world. </summary>
-    public class ActorEntity : Entity<ActorData>
+    public class ActorEntity : Entity
     {
         /// <summary> Represents a thinking, controllable entity within the game world. </summary>
-        /// <param name="data"> The persistent data object representing the actor's state. </param>
-        public ActorEntity(ActorData data) : base(data) {}
+        public ActorEntity() : base() { }
+
+        /// <inheritdoc/>
+        public override String GetUId() => "Test";
+
     }
 }
