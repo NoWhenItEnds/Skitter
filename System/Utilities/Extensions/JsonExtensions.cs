@@ -16,9 +16,16 @@ namespace Skitter.Utilities.Extensions
 
             foreach (String filepath in filepaths)
             {
-                GD.Print(filepath);
-                T newData = JsonSerializer.Deserialize<T>(filepath) ?? throw new JsonException($"Unable to deserialise file at '{filepath}' to type {typeof(T)}.");
-                data.Add(newData);
+                try
+                {
+                    GD.Print(ProjectSettings.GlobalizePath(filepath));
+                    T newData = JsonSerializer.Deserialize<T>(filepath) ?? throw new JsonException($"Unable to deserialise file at '{filepath}' to type {typeof(T)}.");
+                    data.Add(newData);
+                }
+                catch (JsonException exception)
+                {
+                    GD.PrintErr(exception.Message);
+                }
             }
 
             return data.ToArray();

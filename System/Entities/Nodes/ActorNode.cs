@@ -1,11 +1,10 @@
 #nullable disable warnings
 using Godot;
-using Skitter.Entities.Data;
 
-namespace Skitter.Entities
+namespace Skitter.Entities.Nodes
 {
     /// <summary> A node representing an actor entity within the game world. </summary>
-    public partial class ActorNode : CharacterBody2D, IEntity
+    public partial class ActorNode : CharacterBody2D, IEntityNode
     {
         /// <summary> The collision shape for the actor node. </summary>
         [ExportGroup("Nodes")]
@@ -18,11 +17,11 @@ namespace Skitter.Entities
         [Export] private RichTextLabel _nameLabel;  // TODO - A better solution. Just for debug purposes.
 
 
-        /// <summary> Initialise the node by passing it the actor data. </summary>
-        /// <param name="data"> A reference to the actor's data the node will represent. </param>
-        public void Initialise(ActorData data)
+        /// <summary> Initialise the node by passing it the actor entity. </summary>
+        /// <param name="entity"> The actor entity this controller manipulates. </param>
+        public void Initialise(ActorEntity entity)
         {
-            _nameLabel.Text = $"{data.FirstName} {data.LastName}";
+            //_nameLabel.Text = $"{data.FirstName} {data.LastName}";
         }
 
 

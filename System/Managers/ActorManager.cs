@@ -6,6 +6,7 @@ using Administrator.Utilities.Singletons;
 using Godot;
 using Skitter.Entities;
 using Skitter.Entities.Data;
+using Skitter.Entities.Nodes;
 using Skitter.Utilities;
 using Skitter.Utilities.Extensions;
 
@@ -50,14 +51,15 @@ namespace Skitter.Managers
             _actorPool = new ObjectPool<ActorNode>(this, _actorPrefab, _poolSize);
             foreach (ActorData data in _availableActorData)
             {
-                ActorController controller = new ActorController(data);
+                ActorEntity entity = new ActorEntity(data);
+                ActorController controller = new ActorController(entity);
                 _actorControllers.Add(controller);
                 ActorNode node = _actorPool.GetAvailableObject();
                 controller.SetActorNode(node);
             }
 
             // TODO - A better way to determine the player.
-            PlayerController = _actorControllers.FirstOrDefault(x => x.Data.GetUId() == "actordata_janetestington") ?? throw new ArgumentNullException("Unable to find the player actor.");
+            PlayerController = _actorControllers.FirstOrDefault(x => x.Entity.Data.GetUId() == "actordata_janetestington") ?? throw new ArgumentNullException("Unable to find the player actor.");
         }
     }
 }
