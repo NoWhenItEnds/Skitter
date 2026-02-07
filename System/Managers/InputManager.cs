@@ -1,6 +1,6 @@
 #nullable disable warnings
-using Administrator.Utilities.Singletons;
 using Godot;
+using Skitter.Utilities.Singletons;
 using System;
 
 namespace Skitter.Managers

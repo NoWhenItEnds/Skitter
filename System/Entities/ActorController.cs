@@ -1,5 +1,4 @@
 using System;
-using Godot;
 using Skitter.Entities.Nodes;
 
 namespace Skitter.Entities
@@ -38,26 +37,6 @@ namespace Skitter.Entities
             {
                 Node.Initialise(Entity);
             }
-        }
-
-
-        /// <summary> Attempt to move the actor. </summary>
-        /// <param name="direction"> The direction to move. </param>
-        /// <param name="collidingEntity"> If there was a collision stopping movement, this is the colliding entity. A null indicates that there wasn't one. </param>
-        /// <returns> Whether the movement was successful. </returns>
-        public Boolean TryMove(Vector2 direction, out IEntityNode? collidingEntity)
-        {
-            Boolean isSuccessful = false;
-            collidingEntity = null;
-
-            if (Node != null)   // TODO - A way to move when the node isn't loaded? How to handle position without node? Save data needs it.
-            {
-                isSuccessful = true;
-                Node.Velocity = direction * 100f;
-                Node.MoveAndSlide();
-            }
-
-            return isSuccessful;
         }
 
 

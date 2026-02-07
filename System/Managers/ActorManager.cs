@@ -1,11 +1,11 @@
 #nullable disable warnings
 using System;
 using System.Collections.Generic;
-using Administrator.Utilities.Singletons;
 using Godot;
 using Skitter.Entities;
 using Skitter.Entities.Nodes;
 using Skitter.Utilities;
+using Skitter.Utilities.Singletons;
 
 namespace Skitter.Managers
 {

@@ -1,7 +1,7 @@
 #nullable disable warnings
 using Godot;
 
-namespace Administrator.Utilities.Singletons
+namespace Skitter.Utilities.Singletons
 {
     /// <summary> Implementation of a singleton as a Node. </summary>
     /// <typeparam name="T"> Type of node </typeparam>
