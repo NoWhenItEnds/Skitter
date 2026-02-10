@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Godot;
 using Skitter.Utilities.Singletons;
 using Skitter.Utilities.Types;
 
@@ -42,7 +43,8 @@ namespace Skitter.Managers
             Task endTask = Task.Run(() => TurnEnd.InvokeAsync());
             endTask.GetAwaiter().GetResult();
 
-            CurrentTime = CurrentTime.AddSeconds(3f);
+            CurrentTime = CurrentTime.AddSeconds(1f);
+            GD.Print(CurrentTime.ToLongTimeString());
         }
     }
 

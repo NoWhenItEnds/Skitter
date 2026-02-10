@@ -1,7 +1,9 @@
 #nullable disable warnings
-using Godot;
-using Skitter.Utilities.Singletons;
 using System;
+using Godot;
+using Skitter.Entities.Actors;
+using Skitter.Entities.Actors.Actions;
+using Skitter.Utilities.Singletons;
 
 namespace Skitter.Managers
 {
@@ -11,76 +13,84 @@ namespace Skitter.Managers
         /// <summary> A reference to world game manager. </summary>
         private GameManager _gameManager;
 
-        /// <summary> The direction currently being input by the player. </summary>
-        private Vector2 _inputDirection = Vector2.Zero;
+        /// <summary> A reference to the current player entity. </summary>
+        private ActorEntity _player;
 
 
         /// <inheritdoc/>
         public override void _Ready()
         {
             _gameManager = GameManager.Instance;
+            _player = EntityManager.Instance.Player;
         }
 
 
-        /// <inheritdoc/>
-        public override void _Input(InputEvent @event)
+        // TODO - THERE IS A BETTER WAY TO PROGRESS IF PLAYER ISN"T READY.
+        public override void _Process(Double delta)
         {
-            Boolean isInput = false;
-            isInput = CheckMovement(@event);
-
-            if (isInput)
+            if (_player.QueuedAction != null)
             {
                 _gameManager.ProgressTurn();
             }
         }
 
 
-        private Boolean CheckMovement(InputEvent @event)
+
+        /// <inheritdoc/>
+        public override void _Input(InputEvent @event)
         {
-            Boolean isInput = false;
+            MoveAction? action = null;
+            action = CheckMovement(@event);
+
+            if (action != null)
+            {
+                Boolean wasAdded = _player.TryQueueAction(action);
+                if (wasAdded)
+                {
+                    _gameManager.ProgressTurn();    // TODO - NOT LIKE THIS!
+                }
+            }
+        }
+
+
+        private MoveAction? CheckMovement(InputEvent @event)
+        {
+            MoveAction? action = null;
 
             if (@event.IsAction("action_move_n"))
             {
-                isInput = true;
-                EntityManager.Instance.Player.TryMove(Vector3I.Down);
+                action = new MoveAction(_player, Vector3I.Down);
             }
             else if (@event.IsAction("action_move_e"))
             {
-                isInput = true;
-                EntityManager.Instance.Player.TryMove(Vector3I.Right);
+                action = new MoveAction(_player, Vector3I.Right);
             }
             else if (@event.IsAction("action_move_s"))
             {
-                isInput = true;
-                EntityManager.Instance.Player.TryMove(Vector3I.Up);
+                action = new MoveAction(_player, Vector3I.Up);
             }
             else if (@event.IsAction("action_move_w"))
             {
-                isInput = true;
-                EntityManager.Instance.Player.TryMove(Vector3I.Left);
+                action = new MoveAction(_player, Vector3I.Left);
             }
             else if (@event.IsAction("action_move_ne"))
             {
-                isInput = true;
-                EntityManager.Instance.Player.TryMove(new Vector3I(1, -1, 0));
+                action = new MoveAction(_player, new Vector3I(1, -1, 0));
             }
             else if (@event.IsAction("action_move_se"))
             {
-                isInput = true;
-                EntityManager.Instance.Player.TryMove(new Vector3I(1, 1, 0));
+                action = new MoveAction(_player, new Vector3I(1, 1, 0));
             }
             else if (@event.IsAction("action_move_sw"))
             {
-                isInput = true;
-                EntityManager.Instance.Player.TryMove(new Vector3I(-1, 1, 0));
+                action = new MoveAction(_player, new Vector3I(-1, 1, 0));
             }
             else if (@event.IsAction("action_move_nw"))
             {
-                isInput = true;
-                EntityManager.Instance.Player.TryMove(new Vector3I(-1, -1, 0));
+                action = new MoveAction(_player, new Vector3I(-1, -1, 0));
             }
 
-            return isInput;
+            return action;
         }
     }
 }

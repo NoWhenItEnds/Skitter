@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Skitter.Entities;
+using Skitter.Entities.Actors;
 using Skitter.Utilities.Singletons;
 
 namespace Skitter.Managers
@@ -19,7 +20,7 @@ namespace Skitter.Managers
         [Export] private Int32 _cellSize = 32;
 
 
-        public Entity Player { get; private set; }
+        public ActorEntity Player { get; private set; }
 
 
         /// <summary> The world grid. Maps all the entities within the world to their cell position. </summary>
@@ -53,7 +54,7 @@ namespace Skitter.Managers
             {
                 ActorEntity entity = new ActorEntity();
                 Vector3I position = new Vector3I(random.RandiRange(0, 10), random.RandiRange(0, 10), 0);
-                entity.Position = position;
+                entity.TrySetPosition(position);
                 _entities.Add(entity);
             }
         }

@@ -1,7 +1,7 @@
 using System;
 using Skitter.Entities.Nodes;
 
-namespace Skitter.Entities
+namespace Skitter.Entities.Actors
 {
     /// <summary> A controller / brain for an actor entity. </summary>
     public class ActorController : IEquatable<ActorController>

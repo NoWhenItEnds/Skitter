@@ -3,20 +3,20 @@
 [ext_resource type="Script" uid="uid://dnw8bqf16ag4t" path="res://System/Entities/EntityNode.cs" id="1_m21nq"]
 [ext_resource type="SpriteFrames" uid="uid://d08846xa5hf2a" path="res://Content/Resources/SpriteFrames/SpriteFrame_Placeholder.tres" id="2_wrqiv"]
 
-[node name="EntityNode" type="Node2D" unique_id=1948441029 node_paths=PackedStringArray("_sprite", "_nameLabel")]
+[node name="EntityNode" type="Node2D" unique_id=1948441029 node_paths=PackedStringArray("_sprite", "_debugLabel")]
 script = ExtResource("1_m21nq")
 _sprite = NodePath("AnimatedSprite2D")
-_nameLabel = NodePath("Name Label")
+_debugLabel = NodePath("Debug Label")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=538577833]
 texture_filter = 3
 sprite_frames = ExtResource("2_wrqiv")
 offset = Vector2(16, 16)
 
-[node name="Name Label" type="RichTextLabel" parent="." unique_id=1413217776]
-offset_left = -64.0
-offset_top = 64.0
-offset_right = 191.99991
-offset_bottom = 104.0
+[node name="Debug Label" type="RichTextLabel" parent="." unique_id=1413217776]
+offset_left = 32.0
+offset_right = 544.0
+offset_bottom = 69.0
 bbcode_enabled = true
-text = "FirstName LastName"
+text = "DEBUG VALUE"
+fit_content = true

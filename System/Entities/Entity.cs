@@ -6,15 +6,14 @@ using Skitter.Managers;
 namespace Skitter.Entities
 {
     /// <summary> A base entity. All things within the game world will be derived from this. </summary>
-    public abstract class Entity : IEquatable<Entity>
+    public abstract class Entity : IEquatable<Entity>, IDisposable
     {
         /// <summary> The position of the entity in cell-space. </summary>
-        public Vector3I Position
-        {
-            get => field;
-            set => field = SetPosition(value);
-        }
+        public Vector3I Position { get; private set; }
 
+
+        /// <summary> A reference to the game manager singleton. </summary>
+        protected readonly GameManager GAME_MANAGER = GameManager.Instance;
 
         /// <summary> A reference to the entity manager singleton. </summary>
         protected readonly EntityManager ENTITY_MANAGER = EntityManager.Instance;
@@ -23,18 +22,30 @@ namespace Skitter.Entities
         /// <summary> A base entity. All things within the game world will be derived from this. </summary>
         public Entity()
         {
-            GameManager.Instance.TurnStart.Subscribe(OnTurnStartAsync);
-            GameManager.Instance.TurnEnd.Subscribe(OnTurnEndAsync);
+            GAME_MANAGER.TurnStart.Subscribe(OnTurnStartAsync);
+            GAME_MANAGER.TurnStart.Subscribe(OnTurnProcessAsync);
+            GAME_MANAGER.TurnEnd.Subscribe(OnTurnEndAsync);
         }
+
+
+        /// <summary> Called when a new turn begins. </summary>
+        protected virtual async Task OnTurnStartAsync() { }
+
+
+        /// <summary> Called when its time to act within the game world. </summary>
+        protected virtual async Task OnTurnProcessAsync() { }
+
+
+        /// <summary> Called when the current turn concludes. </summary>
+        protected virtual async Task OnTurnEndAsync() { }
 
 
         /// <summary> Attempt to move an entity to a new cell in world space. </summary>
         /// <param name="newPosition"> The new position. </param>
-        /// <returns> Whether entity's final position, whether that is the original or the given. </returns>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        private Vector3I SetPosition(Vector3I newPosition)
+        /// <returns> Whether entity's position was successfully set. </returns>
+        public Boolean TrySetPosition(Vector3I newPosition)
         {
-            Vector3I finalPosition = Position;
+            Boolean isSuccessful = false;
 
             if (ENTITY_MANAGER.TryGetCell(Position, out Cell? oldCell) && oldCell != null)
             {
@@ -44,40 +55,22 @@ namespace Skitter.Entities
                     {
                         oldCell.TryRemoveEntity(this);
                         newCell.TryAddEntity(this);
-                        finalPosition = newPosition;
+                        Position = newPosition;
+                        isSuccessful = true;
                     }
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException(nameof(newPosition), $"The new position, '{newPosition}', isn't within the world grid.");
+                    GD.PrintErr($"The new position, '{newPosition}', isn't within the world grid.");
                 }
             }
             else
             {
-                throw new ArgumentOutOfRangeException(nameof(Position), $"The old position, '{Position}', isn't within the world grid.");
+                GD.PrintErr($"The old position, '{Position}', isn't within the world grid.");
             }
 
-            return finalPosition;
+            return isSuccessful;
         }
-
-
-        /// <summary> Attempt to move an entity by the given amount. </summary>
-        /// <param name="relativePosition"> The new position relative to the entity's. </param>
-        /// <returns> Whether the entity was successfully moved. </returns>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        public Boolean TryMove(Vector3I relativePosition)
-        {
-            Vector3I destination = Position + relativePosition;
-            return (Position = destination) == destination;   // Is our new position equal to our desired destination.
-        }
-
-
-        /// <summary> Called when a new turn begins. </summary>
-        public virtual async Task OnTurnStartAsync() { }
-
-
-        /// <summary> Called when the current turn concludes. </summary>
-        public virtual async Task OnTurnEndAsync() { }
 
 
         /// <summary> Get the entity's unique identifier. </summary>
@@ -91,5 +84,14 @@ namespace Skitter.Entities
 
         /// <inheritdoc/>
         public Boolean Equals(Entity? other) => other != null ? GetUId() == other.GetUId() : false;
+
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            GAME_MANAGER.TurnStart.Unsubscribe(OnTurnStartAsync);
+            GAME_MANAGER.TurnStart.Unsubscribe(OnTurnProcessAsync);
+            GAME_MANAGER.TurnEnd.Unsubscribe(OnTurnEndAsync);
+        }
     }
 }
