@@ -9,7 +9,7 @@ namespace Skitter.Entities
     public class Cell
     {
         /// <summary> The grid position within the global grid. </summary>
-        public Vector3I Position { get; init; }
+        public Vector3I Position { get; init; } = Vector3I.Zero;
 
         /// <summary> What kind of ground surface this cell has. </summary>
         public SurfaceKind Kind { get; private set; } = SurfaceKind.NONE;

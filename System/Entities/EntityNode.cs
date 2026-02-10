@@ -1,12 +1,12 @@
 #nullable disable warnings
-using System.Threading.Tasks;
+using System;
 using Godot;
 using Skitter.Managers;
 
 namespace Skitter.Entities.Nodes
 {
     /// <summary> A node representing an actor entity within the game world. </summary>
-    public partial class ActorNode : Node2D
+    public partial class EntityNode : Node2D
     {
         /// <summary> The actor's sprite. </summary>
         [ExportGroup("Nodes")]
@@ -20,9 +20,6 @@ namespace Skitter.Entities.Nodes
         private Entity? _entity = null;
 
 
-        /// <summary> A reference to the game manager singleton. </summary>
-        private GameManager _gameManager;
-
         /// <summary> A reference to the entity manager singleton. </summary>
         private EntityManager _entityManager;
 
@@ -30,10 +27,7 @@ namespace Skitter.Entities.Nodes
         /// <inheritdoc/>
         public override void _Ready()
         {
-            _gameManager = GameManager.Instance;
             _entityManager = EntityManager.Instance;
-
-            _gameManager.TurnRender.Subscribe(OnTurnRenderAsync);
         }
 
 
@@ -47,8 +41,8 @@ namespace Skitter.Entities.Nodes
         }
 
 
-        /// <summary> Update the node to accurately reflect the state of its data. </summary>
-        private async Task OnTurnRenderAsync()
+        /// <inheritdoc/>
+        public override void _Process(Double delta)
         {
             if (_entity != null)
             {
@@ -62,13 +56,6 @@ namespace Skitter.Entities.Nodes
         public void CleanUp()
         {
             _entity = null;
-        }
-
-
-        /// <inheritdoc/>
-        public override void _ExitTree()
-        {
-            GameManager.Instance.TurnRender.Unsubscribe(OnTurnRenderAsync);
         }
     }
 }

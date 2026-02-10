@@ -2,20 +2,28 @@
 
 [ext_resource type="Script" uid="uid://benvijigyfc82" path="res://System/Managers/GameManager.cs" id="1_k1v7w"]
 [ext_resource type="Script" uid="uid://5gja2cvd5nuj" path="res://System/Managers/EntityManager.cs" id="2_13v0n"]
-[ext_resource type="Script" uid="uid://cnydks1510xfb" path="res://System/Managers/CameraManager.cs" id="4_3jj2t"]
+[ext_resource type="PackedScene" uid="uid://dhj36ec38qugb" path="res://Content/Prefabs/Entities/EntityNode.tscn" id="3_mtcwf"]
+[ext_resource type="Script" uid="uid://cnydks1510xfb" path="res://System/Managers/WorldManager.cs" id="5_13v0n"]
 [ext_resource type="Script" uid="uid://byle046vgqq1w" path="res://System/Managers/InputManager.cs" id="5_mtcwf"]
+[ext_resource type="Script" uid="uid://cj4f8bjo2ef76" path="res://System/Nodes/GameCamera.cs" id="6_ubvt2"]
 
 [node name="Game" type="Node" unique_id=1100874860]
 script = ExtResource("1_k1v7w")
 
-[node name="Entities" type="Node" parent="." unique_id=51479076]
+[node name="Entity Manager" type="Node" parent="." unique_id=51479076]
 script = ExtResource("2_13v0n")
 
-[node name="Camera" type="Node2D" parent="." unique_id=1116327865 node_paths=PackedStringArray("_mainCamera")]
-script = ExtResource("4_3jj2t")
-_mainCamera = NodePath("Main Camera")
-
-[node name="Main Camera" type="Camera2D" parent="Camera" unique_id=194186009]
-
-[node name="Input" type="Node" parent="." unique_id=1775745968]
+[node name="Input Manager" type="Node" parent="." unique_id=1775745968]
 script = ExtResource("5_mtcwf")
+
+[node name="World Manager" type="Node2D" parent="." unique_id=279270237 node_paths=PackedStringArray("_mainCamera", "_entityNodeParent")]
+script = ExtResource("5_13v0n")
+_mainCamera = NodePath("MainCamera")
+_entityNodeParent = NodePath("Entity Nodes")
+_entityPrefab = ExtResource("3_mtcwf")
+
+[node name="MainCamera" type="Node2D" parent="World Manager" unique_id=1870928039]
+script = ExtResource("6_ubvt2")
+metadata/_custom_type_script = "uid://cj4f8bjo2ef76"
+
+[node name="Entity Nodes" type="Node2D" parent="World Manager" unique_id=1831863275]

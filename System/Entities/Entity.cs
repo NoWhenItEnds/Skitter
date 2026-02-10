@@ -9,7 +9,11 @@ namespace Skitter.Entities
     public abstract class Entity : IEquatable<Entity>
     {
         /// <summary> The position of the entity in cell-space. </summary>
-        public Vector3I Position { get; set; } = Vector3I.Zero;
+        public Vector3I Position
+        {
+            get => field;
+            set => field = SetPosition(value);
+        }
 
 
         /// <summary> A reference to the entity manager singleton. </summary>
@@ -26,11 +30,11 @@ namespace Skitter.Entities
 
         /// <summary> Attempt to move an entity to a new cell in world space. </summary>
         /// <param name="newPosition"> The new position. </param>
-        /// <returns> Whether the entity was successfully moved. </returns>
+        /// <returns> Whether entity's final position, whether that is the original or the given. </returns>
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public Boolean TrySetPosition(Vector3I newPosition)
+        private Vector3I SetPosition(Vector3I newPosition)
         {
-            Boolean isSuccessful = false;
+            Vector3I finalPosition = Position;
 
             if (ENTITY_MANAGER.TryGetCell(Position, out Cell? oldCell) && oldCell != null)
             {
@@ -40,6 +44,7 @@ namespace Skitter.Entities
                     {
                         oldCell.TryRemoveEntity(this);
                         newCell.TryAddEntity(this);
+                        finalPosition = newPosition;
                     }
                 }
                 else
@@ -52,7 +57,18 @@ namespace Skitter.Entities
                 throw new ArgumentOutOfRangeException(nameof(Position), $"The old position, '{Position}', isn't within the world grid.");
             }
 
-            return isSuccessful;
+            return finalPosition;
+        }
+
+
+        /// <summary> Attempt to move an entity by the given amount. </summary>
+        /// <param name="relativePosition"> The new position relative to the entity's. </param>
+        /// <returns> Whether the entity was successfully moved. </returns>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public Boolean TryMove(Vector3I relativePosition)
+        {
+            Vector3I destination = Position + relativePosition;
+            return (Position = destination) == destination;   // Is our new position equal to our desired destination.
         }
 
 

@@ -10,7 +10,7 @@ namespace Skitter.Entities
         public ActorEntity Entity { get; private set; }
 
         /// <summary> The representative node for the actor within the game world. </summary>
-        public ActorNode? Node { get; private set; } = null;
+        public EntityNode? Node { get; private set; } = null;
 
 
         /// <summary> A controller / brain for an actor entity. </summary>
@@ -23,7 +23,7 @@ namespace Skitter.Entities
 
         /// <summary> Set the node representing the actor within the game world. </summary>
         /// <param name="node"> The actor's new node, or a null if one is being removed. </param>
-        public void SetActorNode(ActorNode? node)
+        public void SetActorNode(EntityNode? node)
         {
             // Check we have a node needing clean up.
             if (Node != null)

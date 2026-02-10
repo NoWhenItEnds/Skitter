@@ -1,5 +1,7 @@
+#nullable disable warnings
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Skitter.Entities;
 using Skitter.Utilities.Singletons;
@@ -17,8 +19,15 @@ namespace Skitter.Managers
         [Export] private Int32 _cellSize = 32;
 
 
+        public Entity Player { get; private set; }
+
+
         /// <summary> The world grid. Maps all the entities within the world to their cell position. </summary>
         private Dictionary<Vector3I, Cell> _grid = new Dictionary<Vector3I, Cell>();
+
+        /// <summary> A collection of all the entities in the game world. </summary>
+        /// <remarks> Having a separate set with references to the entities stops us from a more expensive search through all the cells in the grid. </remarks>
+        private HashSet<Entity> _entities = new HashSet<Entity>();
 
 
         /// <inheritdoc/>
@@ -35,6 +44,17 @@ namespace Skitter.Managers
                         _grid.Add(position, new Cell(position));
                     }
                 }
+            }
+
+            // TODO - Test entities.
+            Player = new ActorEntity();
+            RandomNumberGenerator random = new RandomNumberGenerator();
+            for (Int32 i = 0; i < 10; i++)
+            {
+                ActorEntity entity = new ActorEntity();
+                Vector3I position = new Vector3I(random.RandiRange(0, 10), random.RandiRange(0, 10), 0);
+                entity.Position = position;
+                _entities.Add(entity);
             }
         }
 
@@ -73,5 +93,29 @@ namespace Skitter.Managers
                 throw new ArgumentOutOfRangeException(nameof(position), $"The position, '{position}', isn't within the world grid.");
             }
         }
+
+
+        /// <summary> Get the cell position of a Godot-space location from the grid. </summary>
+        /// <param name="position"> The Godot-space location. </param>
+        /// <returns> The calculated position for the nearest cell within the grid. </returns>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public Vector3I CalculateGridPosition(Vector3 position)
+        {
+            Vector3I cellPosition = new Vector3I((Int32)(position.X / _cellSize), (Int32)(position.Y / _cellSize), (Int32)(position.Z / _cellSize));
+            if (TryGetCell(cellPosition, out Cell? _))
+            {
+                return cellPosition;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(position), $"The position, '{position}', resolves to a cell position, '{cellPosition}', that isn't within the world grid.");
+            }
+        }
+
+
+        /// <summary> Get all the entities in the world of the given type. </summary>
+        /// <typeparam name="T"> The type of entity to retrieve. </typeparam>
+        /// <returns> An immutable array of entities. </returns>
+        public T[] GetEntities<T>() where T : Entity => _entities.OfType<T>().ToArray();
     }
 }
