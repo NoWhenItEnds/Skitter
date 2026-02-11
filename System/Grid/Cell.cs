@@ -2,17 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Skitter.Entities;
+using Skitter.Interfaces;
 
-namespace Skitter.Entities
+namespace Skitter.Grid
 {
     /// <summary> A position within the game world. Holds entities. </summary>
-    public class Cell
+    public class Cell : IGraphical
     {
-        /// <summary> The grid position within the global grid. </summary>
-        public Vector3I Position { get; init; } = Vector3I.Zero;
-
         /// <summary> What kind of ground surface this cell has. </summary>
         public SurfaceKind Kind { get; private set; } = SurfaceKind.NONE;
+
+
+        /// <summary> The grid position within the global grid. </summary>
+        private readonly Vector3I POSITION;
 
 
         /// <summary> The entities currently at this position. </summary>
@@ -23,8 +26,12 @@ namespace Skitter.Entities
         /// <param name="position"> The grid position within the global grid. </param>
         public Cell(Vector3I position)
         {
-            Position = position;
+            POSITION = position;
         }
+
+
+        /// <inheritdoc/>
+        public Vector3I GetPosition() => POSITION;
 
 
         /// <summary> Get all the entities in a cell of the given type. </summary>

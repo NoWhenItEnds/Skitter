@@ -64,7 +64,7 @@ namespace Skitter.Managers
             // TODO - Instead have it look at the 'look node'.
             if (_entityManager.Player != null)
             {
-                Vector3 rawPosition = _entityManager.CalculateRenderPosition(_entityManager.Player.Position);
+                Vector3 rawPosition = _entityManager.CalculateRenderPosition(_entityManager.Player.GetPosition());
                 _mainCamera.GlobalPosition = new Vector2(rawPosition.X, rawPosition.Y);
             }
 
@@ -74,7 +74,7 @@ namespace Skitter.Managers
             // First check if an entity is not in range of the view.
             foreach (KeyValuePair<Entity, EntityNode> item in _entityMap)
             {
-                Int32 distance = item.Key.Position.DistanceSquaredTo(cameraCellPosition);
+                Int32 distance = item.Key.GetPosition().DistanceSquaredTo(cameraCellPosition);
                 if (distance > _viewDistance)
                 {
                     item.Value.CleanUp();
@@ -86,7 +86,7 @@ namespace Skitter.Managers
             // Add new items if they are in range, checking first that they do not have a node already.
             foreach (Entity entity in _entityManager.GetEntities<Entity>())
             {
-                Int32 distance = entity.Position.DistanceSquaredTo(cameraCellPosition);
+                Int32 distance = entity.GetPosition().DistanceSquaredTo(cameraCellPosition);
                 if (distance <= _viewDistance && !_entityMap.ContainsKey(entity))
                 {
                     EntityNode node = _entityPool.GetAvailableObject();

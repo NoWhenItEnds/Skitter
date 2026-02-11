@@ -29,7 +29,7 @@ namespace Skitter.Entities.Actors.Actions
         /// <inheritdoc/>
         public override Boolean TryInvoke()
         {
-            Vector3I destination = PERFORMER.Position + _moveDirection;
+            Vector3I destination = PERFORMER.GetPosition() + _moveDirection;
             return PERFORMER.TrySetPosition(destination);
         }
     }

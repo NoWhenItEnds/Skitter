@@ -1,22 +1,24 @@
 using System;
 using System.Threading.Tasks;
 using Godot;
+using Skitter.Grid;
+using Skitter.Interfaces;
 using Skitter.Managers;
 
 namespace Skitter.Entities
 {
     /// <summary> A base entity. All things within the game world will be derived from this. </summary>
-    public abstract class Entity : IEquatable<Entity>, IDisposable
+    public abstract class Entity : IGraphical, IEquatable<Entity>, IDisposable
     {
-        /// <summary> The position of the entity in cell-space. </summary>
-        public Vector3I Position { get; private set; }
-
-
         /// <summary> A reference to the game manager singleton. </summary>
         protected readonly GameManager GAME_MANAGER = GameManager.Instance;
 
         /// <summary> A reference to the entity manager singleton. </summary>
         protected readonly EntityManager ENTITY_MANAGER = EntityManager.Instance;
+
+
+        /// <summary> The grid position within the global grid. </summary>
+        protected Vector3I _position;
 
 
         /// <summary> A base entity. All things within the game world will be derived from this. </summary>
@@ -40,6 +42,10 @@ namespace Skitter.Entities
         protected virtual async Task OnTurnEndAsync() { }
 
 
+        /// <inheritdoc/>
+        public Vector3I GetPosition() => _position;
+
+
         /// <summary> Attempt to move an entity to a new cell in world space. </summary>
         /// <param name="newPosition"> The new position. </param>
         /// <returns> Whether entity's position was successfully set. </returns>
@@ -47,7 +53,7 @@ namespace Skitter.Entities
         {
             Boolean isSuccessful = false;
 
-            if (ENTITY_MANAGER.TryGetCell(Position, out Cell? oldCell) && oldCell != null)
+            if (ENTITY_MANAGER.TryGetCell(_position, out Cell? oldCell) && oldCell != null)
             {
                 if (ENTITY_MANAGER.TryGetCell(newPosition, out Cell? newCell) && newCell != null)
                 {
@@ -55,7 +61,7 @@ namespace Skitter.Entities
                     {
                         oldCell.TryRemoveEntity(this);
                         newCell.TryAddEntity(this);
-                        Position = newPosition;
+                        _position = newPosition;
                         isSuccessful = true;
                     }
                 }
@@ -66,7 +72,7 @@ namespace Skitter.Entities
             }
             else
             {
-                GD.PrintErr($"The old position, '{Position}', isn't within the world grid.");
+                GD.PrintErr($"The old position, '{_position}', isn't within the world grid.");
             }
 
             return isSuccessful;

@@ -5,6 +5,7 @@ using System.Linq;
 using Godot;
 using Skitter.Entities;
 using Skitter.Entities.Actors;
+using Skitter.Grid;
 using Skitter.Utilities.Singletons;
 
 namespace Skitter.Managers
