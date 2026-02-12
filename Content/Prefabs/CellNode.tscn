@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://b8luva4yufdua"]
+
+[ext_resource type="Script" uid="uid://b3tsj76qcigwm" path="res://System/Grid/CellNode.cs" id="1_sl5mr"]
+[ext_resource type="SpriteFrames" uid="uid://d08846xa5hf2a" path="res://Content/Resources/SpriteFrames/SpriteFrame_Placeholder.tres" id="2_n674c"]
+
+[node name="CellNode" type="Node2D" unique_id=1948441029 node_paths=PackedStringArray("_sprite")]
+script = ExtResource("1_sl5mr")
+_sprite = NodePath("AnimatedSprite2D")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=538577833]
+texture_filter = 3
+sprite_frames = ExtResource("2_n674c")
+offset = Vector2(16, 16)

@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://benvijigyfc82" path="res://System/Managers/GameManager.cs" id="1_k1v7w"]
 [ext_resource type="Script" uid="uid://5gja2cvd5nuj" path="res://System/Managers/EntityManager.cs" id="2_13v0n"]
-[ext_resource type="PackedScene" uid="uid://dhj36ec38qugb" path="res://Content/Prefabs/Entities/EntityNode.tscn" id="3_mtcwf"]
-[ext_resource type="Script" uid="uid://cnydks1510xfb" path="res://System/Managers/WorldManager.cs" id="5_13v0n"]
+[ext_resource type="PackedScene" uid="uid://dhj36ec38qugb" path="res://Content/Prefabs/EntityNode.tscn" id="3_mtcwf"]
+[ext_resource type="Script" uid="uid://cnydks1510xfb" path="res://System/Managers/NodeManager.cs" id="5_13v0n"]
 [ext_resource type="Script" uid="uid://byle046vgqq1w" path="res://System/Managers/InputManager.cs" id="5_mtcwf"]
 [ext_resource type="Script" uid="uid://cj4f8bjo2ef76" path="res://System/Nodes/GameCamera.cs" id="6_ubvt2"]
 
@@ -16,14 +16,14 @@ script = ExtResource("2_13v0n")
 [node name="Input Manager" type="Node" parent="." unique_id=1775745968]
 script = ExtResource("5_mtcwf")
 
-[node name="World Manager" type="Node2D" parent="." unique_id=279270237 node_paths=PackedStringArray("_mainCamera", "_entityNodeParent")]
+[node name="Node Manager" type="Node2D" parent="." unique_id=279270237 node_paths=PackedStringArray("_mainCamera", "_entityNodeParent")]
 script = ExtResource("5_13v0n")
 _mainCamera = NodePath("MainCamera")
 _entityNodeParent = NodePath("Entity Nodes")
 _entityPrefab = ExtResource("3_mtcwf")
 
-[node name="MainCamera" type="Node2D" parent="World Manager" unique_id=1870928039]
+[node name="MainCamera" type="Node2D" parent="Node Manager" unique_id=1870928039]
 script = ExtResource("6_ubvt2")
 metadata/_custom_type_script = "uid://cj4f8bjo2ef76"
 
-[node name="Entity Nodes" type="Node2D" parent="World Manager" unique_id=1831863275]
+[node name="Entity Nodes" type="Node2D" parent="Node Manager" unique_id=1831863275]

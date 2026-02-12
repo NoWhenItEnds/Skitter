@@ -11,7 +11,7 @@ using Skitter.Utilities.Singletons;
 namespace Skitter.Managers
 {
     /// <summary> A manager singleton for nodes within the Godot game world. </summary>
-    public partial class WorldManager : SingletonNode2D<WorldManager>
+    public partial class NodeManager : SingletonNode2D<NodeManager>
     {
         [ExportGroup("Nodes")]
         [Export] private GameCamera _mainCamera;
@@ -33,6 +33,9 @@ namespace Skitter.Managers
         [Export] private PackedScene _entityPrefab;
 
 
+        /// <summary> A reference to the game manager singleton. </summary>
+        private GameManager _gameManager;
+
         /// <summary> A reference to the entity manager singleton. </summary>
         private EntityManager _entityManager;
 
@@ -46,6 +49,7 @@ namespace Skitter.Managers
         /// <inheritdoc/>
         public override void _Ready()
         {
+            _gameManager = GameManager.Instance;
             _entityManager = EntityManager.Instance;
 
             // Initialise the nodes.
@@ -64,12 +68,12 @@ namespace Skitter.Managers
             // TODO - Instead have it look at the 'look node'.
             if (_entityManager.Player != null)
             {
-                Vector3 rawPosition = _entityManager.CalculateRenderPosition(_entityManager.Player.GetPosition());
+                Vector3 rawPosition = _gameManager.CalculateRenderPosition(_entityManager.Player.GetPosition());
                 _mainCamera.GlobalPosition = new Vector2(rawPosition.X, rawPosition.Y);
             }
 
             // Cull / spawn nodes around the camera.
-            Vector3I cameraCellPosition = _entityManager.CalculateGridPosition(new Vector3(_mainCamera.GlobalPosition.X, _mainCamera.GlobalPosition.Y, 0));  // TODO - Z pulls from current layer level. Do on Vector2 overload for CalculateGridPosition?
+            Vector3I cameraCellPosition = _gameManager.CalculateGridPosition(new Vector3(_mainCamera.GlobalPosition.X, _mainCamera.GlobalPosition.Y, 0));  // TODO - Z pulls from current layer level. Do on Vector2 overload for CalculateGridPosition?
 
             // First check if an entity is not in range of the view.
             foreach (KeyValuePair<Entity, EntityNode> item in _entityMap)
