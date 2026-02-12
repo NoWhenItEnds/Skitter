@@ -13,6 +13,9 @@ namespace Skitter.Entities
         /// <summary> A reference to the game manager singleton. </summary>
         protected readonly GameManager GAME_MANAGER = GameManager.Instance;
 
+        /// <summary> A reference to the grid manager singleton. </summary>
+        protected readonly GridManager GRID_MANAGER = GridManager.Instance;
+
 
         /// <summary> The grid position within the global grid. </summary>
         protected Vector3I _position;
@@ -50,9 +53,9 @@ namespace Skitter.Entities
         {
             Boolean isSuccessful = false;
 
-            if (GAME_MANAGER.TryGetCell(_position, out Cell? oldCell) && oldCell != null)
+            if (GRID_MANAGER.TryGetCell(_position, out Cell? oldCell) && oldCell != null)
             {
-                if (GAME_MANAGER.TryGetCell(newPosition, out Cell? newCell) && newCell != null)
+                if (GRID_MANAGER.TryGetCell(newPosition, out Cell? newCell) && newCell != null)
                 {
                     if (oldCell.CanRemoveEntity(this) && newCell.CanAddEntity(this))
                     {

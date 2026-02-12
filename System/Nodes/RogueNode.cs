@@ -19,14 +19,14 @@ namespace Skitter.Nodes
         protected T? _data = null;
 
 
-        /// <summary> A reference to the game manager singleton. </summary>
-        protected GameManager _gameManager;
+        /// <summary> A reference to the grid manager singleton. </summary>
+        protected GridManager _gridManager;
 
 
         /// <inheritdoc/>
         public override void _Ready()
         {
-            _gameManager = GameManager.Instance;
+            _gridManager = GridManager.Instance;
         }
 
 
@@ -44,7 +44,7 @@ namespace Skitter.Nodes
         {
             if (_data != null)
             {
-                Vector3 rawPosition = _gameManager.CalculateRenderPosition(_data.GetPosition());
+                Vector3 rawPosition = _gridManager.CalculateRenderPosition(_data.GetPosition());
                 GlobalPosition = new Vector2(rawPosition.X, rawPosition.Y);
             }
         }
