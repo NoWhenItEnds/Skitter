@@ -1,6 +1,7 @@
 #nullable disable warnings
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Skitter.Entities;
 using Skitter.Entities.Nodes;
@@ -29,7 +30,7 @@ namespace Skitter.Managers
         [Export] private Int32 _poolSize = 100;
 
         /// <summary> The cell distance around the camera to render. </summary>
-        [Export] private Int32 _viewDistance = 6;
+        [Export] private Int32 _viewDistance = 8;
 
 
         /// <summary> The prefab used to represent an cell within the game world. </summary>
@@ -52,7 +53,7 @@ namespace Skitter.Managers
         /// <summary> The pool used to manage entity nodes within Godot space. </summary>
         private ObjectPool<EntityNode> _entityPool;
 
-        /// <summary> A helper map of entities that currently have a node representing them in the game world. </summary>
+        /// <summary> A helper map of entities and their representative nodes in the game world. </summary>
         private Dictionary<Entity, EntityNode> _entityMap = new Dictionary<Entity, EntityNode>();
 
 
@@ -83,7 +84,7 @@ namespace Skitter.Managers
                 _mainCamera.GlobalPosition = new Vector2(rawPosition.X, rawPosition.Y);
             }
 
-            PerformCull();
+            //PerformCull();
         }
 
 
@@ -98,30 +99,25 @@ namespace Skitter.Managers
             Int32 y0 = Math.Clamp(cameraCellPosition.Y - _viewDistance, 0, _gridManager.WorldSize.Y);
             Int32 y1 = Math.Clamp(cameraCellPosition.Y + _viewDistance, 0, _gridManager.WorldSize.Y);
 
-            // First check if an entity is not in range of the view.
-            foreach (KeyValuePair<Entity, EntityNode> item in _entityMap)
-            {
-                Vector3I position = item.Key.GetPosition();
-                if (position.X < x0 || position.X > x1 || position.Y < y0 || position.Y > y1)
-                {
-                    item.Value.CleanUp();
-                    _entityPool.FreeObject(item.Value);
-                    _entityMap.Remove(item.Key);
-                }
-            }
+            // A list of all the entities we're currently showing, after checking the entities still in range, the values that remain here need to be culled.
+            List<Entity> dirtyEntities = new List<Entity>(_entityMap.Keys);
 
-            // Get cells in range.
+            // Check each cell in range.
             for (Int32 y = y0; y <= y1; y++)
             {
                 for (Int32 x = x0; x <= x1; x++)
                 {
-                    Vector3I position = new Vector3I(x, y, 0);
+                    Vector3I position = new Vector3I(x, y, 0);  // TODO - Z pulls from current layer level. Do on Vector2 overload for CalculateGridPosition?
                     if (_gridManager.TryGetCell(position, out Cell? cell) && cell != null)
                     {
-                        // Add new items, checking first that they do not have a node already.
-                        foreach (Entity entity in cell.GetEntities<Entity>())
+                        Entity? entity = cell.GetEntities<Entity>().FirstOrDefault() ?? null;   // TODO - We only want to show one entity, so we need sorting of some kind.
+                        if (entity != null)
                         {
-                            if (!_entityMap.ContainsKey(entity))
+                            if (_entityMap.ContainsKey(entity))   // Are we already tracking the cell?
+                            {
+                                dirtyEntities.Remove(entity);
+                            }
+                            else                                    // If we're not, we want to by adding a new node.
                             {
                                 EntityNode node = _entityPool.GetAvailableObject();
                                 node.Initialise(entity);
@@ -130,6 +126,15 @@ namespace Skitter.Managers
                         }
                     }
                 }
+            }
+
+
+            foreach (Entity entity in dirtyEntities)
+            {
+                EntityNode node = _entityMap[entity];
+                node.CleanUp();
+                _entityPool.FreeObject(node);
+                _entityMap.Remove(entity);
             }
         }
     }
