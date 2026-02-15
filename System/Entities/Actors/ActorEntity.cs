@@ -11,6 +11,9 @@ namespace Skitter.Entities.Actors
         /// <summary> The actor's current given name. </summary>
         public ActorName Name { get; private set; } = ActorName.Empty;
 
+        /// <summary> The attributes, skills, and derived stats the define an actor's abilities. </summary>
+        public ActorStats Stats { get; private set; }
+
         /// <summary> The current action the actor is planning to do when it has enough saved units to pay for it. </summary>
         public ActorAction? QueuedAction { get; private set; } = null;
 
@@ -22,6 +25,7 @@ namespace Skitter.Entities.Actors
         public ActorEntity() : base()
         {
             Name = ActorName.Random(NameGender.NONE);
+            Stats = new ActorStats(this);
         }
 
 
