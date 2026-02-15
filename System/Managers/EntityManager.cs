@@ -19,6 +19,9 @@ namespace Skitter.Managers
         /// <remarks> Having a separate set with references to the entities stops us from a more expensive search through all the cells in the grid. </remarks>
         private HashSet<Entity> _entities = new HashSet<Entity>();
 
+        /// <summary> The AI controller used to provide non-player controlled actors with actions. </summary>
+        private ActorController _actorController = new ActorController();
+
 
         /// <inheritdoc/>
         public override void _Ready()

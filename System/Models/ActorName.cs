@@ -5,6 +5,7 @@ using static Skitter.Utilities.Extensions.CsvExtensions;
 namespace Skitter.Models
 {
     /// <summary> A person's full name with reference to their personal and clan names. </summary>
+    /// <remarks Uses: https://github.com/sigpwned/popular-names-by-country-dataset </remarks>
     public record ActorName
     {
         /// <summary> An actor's common, personal name. </summary>
