@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Skitter.Entities;
-using Skitter.Interfaces;
 
 namespace Skitter.Grid
 {
     /// <summary> A position within the game world. Holds entities. </summary>
-    public class Cell : IGraphical
+    public class Cell
     {
+        public event Action<Cell> CellUpdated = delegate { };
+
         /// <summary> What kind of ground surface this cell has. </summary>
-        public SurfaceKind Kind { get; private set; } = SurfaceKind.NONE;
+        public CellKind Kind { get; private set; } = CellKind.NONE;
 
 
         /// <summary> The grid position within the global grid. </summary>
@@ -40,6 +41,14 @@ namespace Skitter.Grid
         public T[] GetEntities<T>() where T : Entity => _entities.OfType<T>().ToArray();
 
 
+        /// <summary> Get the representative entity to render for the cell on the screen. </summary>
+        /// <returns> The 'most important' entity representing the current state of the cell. A null indicates that there are no entities visible. </returns>
+        public Entity? GetRenderEntity()
+        {
+            return _entities.FirstOrDefault() ?? null;
+        }
+
+
         /// <summary> Attempt to add a new entity to the location. </summary>
         /// <param name="entity"> A reference to the incoming entity. </param>
         /// <returns> Whether the entity was accepted. </returns>
@@ -49,6 +58,7 @@ namespace Skitter.Grid
             if (canAdd)
             {
                 _entities.Add(entity);
+                CellUpdated.Invoke(this);
             }
             return canAdd;
         }
@@ -73,6 +83,7 @@ namespace Skitter.Grid
             if (canRemove)
             {
                 _entities.Remove(entity);
+                CellUpdated.Invoke(this);
             }
             return canRemove;
         }
@@ -86,13 +97,15 @@ namespace Skitter.Grid
             // TODO - Add cell-specific check based upon the entities that already occupy the location.
             return true;
         }
+    }
 
 
-        /// <summary> The kinds of surfaces within the game world. </summary>
-        public enum SurfaceKind
-        {
-            NONE,
-            GROUND
-        }
+    /// <summary> The kinds of surfaces within the game world. </summary>
+    public enum CellKind
+    {
+        NONE,
+        GROUND,
+        STONE,
+        WATER
     }
 }

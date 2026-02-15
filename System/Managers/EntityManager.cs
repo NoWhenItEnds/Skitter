@@ -26,10 +26,10 @@ namespace Skitter.Managers
             // TODO - Test entities.
             Player = new ActorEntity();
             RandomNumberGenerator random = new RandomNumberGenerator();
-            for (Int32 i = 0; i < 10; i++)
+            for (Int32 i = 0; i < 1000; i++)
             {
                 ActorEntity entity = new ActorEntity();
-                Vector3I position = new Vector3I(random.RandiRange(0, 10), random.RandiRange(0, 10), 0);
+                Vector3I position = new Vector3I(random.RandiRange(0, 100), random.RandiRange(0, 100), 0);
                 entity.TrySetPosition(position);
                 _entities.Add(entity);
             }

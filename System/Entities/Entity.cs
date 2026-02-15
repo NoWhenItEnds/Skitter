@@ -2,13 +2,12 @@ using System;
 using System.Threading.Tasks;
 using Godot;
 using Skitter.Grid;
-using Skitter.Interfaces;
 using Skitter.Managers;
 
 namespace Skitter.Entities
 {
     /// <summary> A base entity. All things within the game world will be derived from this. </summary>
-    public abstract class Entity : IGraphical, IEquatable<Entity>, IDisposable
+    public abstract class Entity : IEquatable<Entity>, IDisposable
     {
         /// <summary> A reference to the game manager singleton. </summary>
         protected readonly GameManager GAME_MANAGER = GameManager.Instance;

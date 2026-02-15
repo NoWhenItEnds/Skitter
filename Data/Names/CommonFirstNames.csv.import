@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://gse0aujb2gor"
+
+[deps]
+
+files=["res://Data/Names/CommonFirstNames.Country Group.translation", "res://Data/Names/CommonFirstNames.Region.translation", "res://Data/Names/CommonFirstNames.Population.translation", "res://Data/Names/CommonFirstNames.Note.translation", "res://Data/Names/CommonFirstNames.Year.translation", "res://Data/Names/CommonFirstNames.Romanization.translation", "res://Data/Names/CommonFirstNames.Index.translation", "res://Data/Names/CommonFirstNames.Name Group.translation", "res://Data/Names/CommonFirstNames.Gender.translation", "res://Data/Names/CommonFirstNames.Localized Name.translation", "res://Data/Names/CommonFirstNames.Romanized Name.translation"]
+
+source_file="res://Data/Names/CommonFirstNames.csv"
+dest_files=["res://Data/Names/CommonFirstNames.Country Group.translation", "res://Data/Names/CommonFirstNames.Region.translation", "res://Data/Names/CommonFirstNames.Population.translation", "res://Data/Names/CommonFirstNames.Note.translation", "res://Data/Names/CommonFirstNames.Year.translation", "res://Data/Names/CommonFirstNames.Romanization.translation", "res://Data/Names/CommonFirstNames.Index.translation", "res://Data/Names/CommonFirstNames.Name Group.translation", "res://Data/Names/CommonFirstNames.Gender.translation", "res://Data/Names/CommonFirstNames.Localized Name.translation", "res://Data/Names/CommonFirstNames.Romanized Name.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

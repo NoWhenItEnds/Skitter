@@ -1,17 +1,27 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using Skitter.Entities;
 using Skitter.Grid;
 using Skitter.Utilities.Singletons;
 
 namespace Skitter.Managers
 {
-    /// <summary> The singleton manager for the game world's grid and cells. </summary>
-    public partial class GridManager : SingletonNode<GridManager>
+    /// <summary> The singleton manager for the game world's grid, cells, and the representation there of. </summary>
+    public partial class GridManager : SingletonNode2D<GridManager>
     {
+        /// <summary> The tilemap used to render grid cells. </summary>
+        [ExportGroup("Nodes")]
+        [ExportSubgroup("Tile Maps")]
+        [Export] private TileMapLayer _cellLayer;
+
+        /// <summary> The tilemap used to render actors. </summary>
+        [Export] private TileMapLayer _actorLayer;
+
+
         /// <summary> How many cells the world contains. </summary>
         [ExportGroup("Settings")]
-        [Export] public Vector3I WorldSize { get; private set; } = new Vector3I(1000, 1000, 10);
+        [Export] public Vector3I WorldSize { get; private set; } = new Vector3I(1000, 1000, 1);
 
         /// <summary> The pixel size of each cell of the grid. </summary>
         [Export] private Int32 _cellSize = 32;
@@ -32,9 +42,38 @@ namespace Skitter.Managers
                     for (Int32 x = 0; x < WorldSize.X; x++)
                     {
                         Vector3I position = new Vector3I(x, y, z);
-                        _grid.Add(position, new Cell(position));
+                        Vector2I cellPosition = new Vector2I(x, y);
+
+                        Cell cell = new Cell(position);
+                        cell.CellUpdated += OnCellUpdate;
+                        OnCellUpdate(cell); // Force the initial cell render.
+                        _grid.Add(position, cell);
                     }
                 }
+            }
+        }
+
+
+        private void OnCellUpdate(Cell cell)
+        {
+            Vector3I position = cell.GetPosition();
+            Vector2I cellPosition = new Vector2I(position.X, position.Y);
+
+            Dictionary<CellKind, Vector2I> kindMap = new Dictionary<CellKind, Vector2I>()
+            {
+                { CellKind.NONE, Vector2I.Zero },
+                { CellKind.GROUND, new Vector2I(0, 1) }
+            };
+            _cellLayer.SetCell(cellPosition, 0, kindMap[cell.Kind]);
+
+            Entity? renderEntity = cell.GetRenderEntity();
+            if (renderEntity != null)
+            {
+                _actorLayer.SetCell(cellPosition, 1, Vector2I.Zero);    // TODO - Research tile sources. Why is this 1 and not 0?
+            }
+            else
+            {
+                _actorLayer.EraseCell(cellPosition);
             }
         }
 
@@ -89,6 +128,27 @@ namespace Skitter.Managers
             else
             {
                 throw new ArgumentOutOfRangeException(nameof(position), $"The position, '{position}', resolves to a cell position, '{cellPosition}', that isn't within the world grid.");
+            }
+        }
+
+
+        /// <inheritdoc/>
+        public override void _ExitTree()
+        {
+            // Clean up cells.
+            for (Int32 z = 0; z < WorldSize.Z; z++)
+            {
+                for (Int32 y = 0; y < WorldSize.Y; y++)
+                {
+                    for (Int32 x = 0; x < WorldSize.X; x++)
+                    {
+                        Vector3I position = new Vector3I(x, y, z);
+                        Vector2I cellPosition = new Vector2I(x, y);
+
+                        Cell cell = _grid[position];
+                        cell.CellUpdated -= OnCellUpdate;
+                    }
+                }
             }
         }
     }

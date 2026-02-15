@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dsboups4ysugj"
+
+[deps]
+
+files=["res://Data/Names/CommonLastNames.Rank.translation", "res://Data/Names/CommonLastNames.Index.translation", "res://Data/Names/CommonLastNames.Name Group.translation", "res://Data/Names/CommonLastNames.Localized Name.translation", "res://Data/Names/CommonLastNames.Romanized Name.translation", "res://Data/Names/CommonLastNames.Count.translation", "res://Data/Names/CommonLastNames.Percent.translation"]
+
+source_file="res://Data/Names/CommonLastNames.csv"
+dest_files=["res://Data/Names/CommonLastNames.Rank.translation", "res://Data/Names/CommonLastNames.Index.translation", "res://Data/Names/CommonLastNames.Name Group.translation", "res://Data/Names/CommonLastNames.Localized Name.translation", "res://Data/Names/CommonLastNames.Romanized Name.translation", "res://Data/Names/CommonLastNames.Count.translation", "res://Data/Names/CommonLastNames.Percent.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

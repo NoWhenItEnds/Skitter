@@ -3,6 +3,7 @@ using System;
 using Godot;
 using Skitter.Entities.Actors;
 using Skitter.Entities.Actors.Actions;
+using Skitter.Nodes;
 using Skitter.Utilities.Singletons;
 
 namespace Skitter.Managers
@@ -10,8 +11,16 @@ namespace Skitter.Managers
     /// <summary> The manager to translate the player's input into controlling the game world. </summary>
     public partial class InputManager : SingletonNode<InputManager>
     {
+        /// <summary> The camera following the player's view. </summary>
+        [ExportGroup("Nodes")]
+        [Export] private GameCamera _playerCamera;
+
+
         /// <summary> A reference to world game manager. </summary>
         private GameManager _gameManager;
+
+        /// <summary> A reference to world grid manager. </summary>
+        private GridManager _gridManager;
 
         /// <summary> A reference to the current player entity. </summary>
         private ActorEntity _player;
@@ -21,6 +30,8 @@ namespace Skitter.Managers
         public override void _Ready()
         {
             _gameManager = GameManager.Instance;
+            _gridManager = GridManager.Instance;
+
             _player = EntityManager.Instance.Player;
         }
 
@@ -48,6 +59,11 @@ namespace Skitter.Managers
                 if (wasAdded)
                 {
                     _gameManager.ProgressTurn();    // TODO - NOT LIKE THIS!
+
+                    // TODO - Not like this either!
+                    Vector3 playerPosition = _gridManager.CalculateRenderPosition(_player.GetPosition());
+                    _playerCamera.GlobalPosition = new Vector2(playerPosition.X, playerPosition.Y);
+
                 }
             }
         }

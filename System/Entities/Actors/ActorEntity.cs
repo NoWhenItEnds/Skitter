@@ -1,21 +1,28 @@
 using System;
 using System.Threading.Tasks;
 using Skitter.Entities.Actors.Actions;
+using Skitter.Models;
 
 namespace Skitter.Entities.Actors
 {
     /// <summary> Represents a thinking, controllable entity within the game world. </summary>
     public class ActorEntity : Entity
     {
+        /// <summary> The actor's current given name. </summary>
+        public ActorName Name { get; private set; } = ActorName.Empty;
+
         /// <summary> The current action the actor is planning to do when it has enough saved units to pay for it. </summary>
         public ActorAction? QueuedAction { get; private set; } = null;
 
         /// <summary> Every action requires a number of units to be spent to do it. When an action is queued, it starts accumulating units every turn to pay for it. </summary>
-        public Int32 CachedTurnUnits { get; private set; }
+        public Int32 CachedTurnUnits { get; private set; } = 0;
 
 
         /// <summary> Represents a thinking, controllable entity within the game world. </summary>
-        public ActorEntity() : base() { }
+        public ActorEntity() : base()
+        {
+            Name = ActorName.Random(NameGender.NONE);
+        }
 
 
         /// <inheritdoc/>
@@ -62,7 +69,7 @@ namespace Skitter.Entities.Actors
 
 
         /// <inheritdoc/>
-        public override String GetUId() => "Test";
+        public override String GetUId() => Name.ToString();
 
 
         /// <summary> Attempt to add an action to the actor's queue. </summary>

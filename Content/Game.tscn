@@ -3,36 +3,32 @@
 [ext_resource type="Script" uid="uid://benvijigyfc82" path="res://System/Managers/GameManager.cs" id="1_k1v7w"]
 [ext_resource type="Script" uid="uid://5gja2cvd5nuj" path="res://System/Managers/EntityManager.cs" id="2_13v0n"]
 [ext_resource type="Script" uid="uid://d3n5bmjxfp84k" path="res://System/Managers/GridManager.cs" id="2_lxji3"]
-[ext_resource type="PackedScene" uid="uid://dhj36ec38qugb" path="res://Content/Prefabs/EntityNode.tscn" id="3_mtcwf"]
-[ext_resource type="Script" uid="uid://cnydks1510xfb" path="res://System/Managers/NodeManager.cs" id="5_13v0n"]
+[ext_resource type="TileSet" uid="uid://qgmot8uywwpv" path="res://Content/Resources/Tilesets/Tileset_Placeholder_Tiles.tres" id="3_13v0n"]
+[ext_resource type="TileSet" uid="uid://cx16hn6lpqa1u" path="res://Content/Resources/Tilesets/TileSet_Placeholder_Actors.tres" id="3_ubvt2"]
 [ext_resource type="Script" uid="uid://byle046vgqq1w" path="res://System/Managers/InputManager.cs" id="5_mtcwf"]
-[ext_resource type="PackedScene" uid="uid://b8luva4yufdua" path="res://Content/Prefabs/CellNode.tscn" id="5_ubvt2"]
 [ext_resource type="Script" uid="uid://cj4f8bjo2ef76" path="res://System/Nodes/GameCamera.cs" id="6_ubvt2"]
 
 [node name="Game" type="Node" unique_id=1100874860]
 script = ExtResource("1_k1v7w")
 
-[node name="Grid Manager" type="Node" parent="." unique_id=1191725649]
+[node name="Grid Manager" type="Node2D" parent="." unique_id=178402834 node_paths=PackedStringArray("_cellLayer", "_actorLayer")]
 script = ExtResource("2_lxji3")
+_cellLayer = NodePath("Cell Layer")
+_actorLayer = NodePath("Actor Layer")
+
+[node name="Cell Layer" type="TileMapLayer" parent="Grid Manager" unique_id=77043010]
+tile_set = ExtResource("3_13v0n")
+
+[node name="Actor Layer" type="TileMapLayer" parent="Grid Manager" unique_id=676003794]
+tile_set = ExtResource("3_ubvt2")
 
 [node name="Entity Manager" type="Node" parent="." unique_id=51479076]
 script = ExtResource("2_13v0n")
 
-[node name="Input Manager" type="Node" parent="." unique_id=1775745968]
+[node name="Input Manager" type="Node" parent="." unique_id=1775745968 node_paths=PackedStringArray("_playerCamera")]
 script = ExtResource("5_mtcwf")
+_playerCamera = NodePath("../MainCamera")
 
-[node name="Node Manager" type="Node2D" parent="." unique_id=279270237 node_paths=PackedStringArray("_mainCamera", "_cellNodeParent", "_entityNodeParent")]
-script = ExtResource("5_13v0n")
-_mainCamera = NodePath("MainCamera")
-_cellNodeParent = NodePath("Cell Nodes")
-_entityNodeParent = NodePath("Entity Nodes")
-_cellPrefab = ExtResource("5_ubvt2")
-_entityPrefab = ExtResource("3_mtcwf")
-
-[node name="MainCamera" type="Node2D" parent="Node Manager" unique_id=1870928039]
+[node name="MainCamera" type="Node2D" parent="." unique_id=1870928039]
 script = ExtResource("6_ubvt2")
 metadata/_custom_type_script = "uid://cj4f8bjo2ef76"
-
-[node name="Cell Nodes" type="Node2D" parent="Node Manager" unique_id=1366210140]
-
-[node name="Entity Nodes" type="Node2D" parent="Node Manager" unique_id=1831863275]
